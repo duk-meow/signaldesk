@@ -6,27 +6,23 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @main
 struct signaldeskApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
+    @StateObject private var authStore = AuthStore()
+    @StateObject private var projectStore = ProjectStore()
+    @StateObject private var groupStore = GroupStore()
+    @StateObject private var chatStore = ChatStore()
+    @StateObject private var uiStore = UIStore()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(authStore)
+                .environmentObject(projectStore)
+                .environmentObject(groupStore)
+                .environmentObject(chatStore)
+                .environmentObject(uiStore)
         }
-        .modelContainer(sharedModelContainer)
     }
 }
